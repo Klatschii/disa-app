@@ -1,10 +1,12 @@
 import {
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 import { router } from "expo-router";
@@ -12,6 +14,7 @@ import { useState } from "react";
 
 export default function RegisterScreen() {
     const [special, setSpecial] = useState("");
+    const [consent, setConsent] = useState(false);
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -62,6 +65,21 @@ export default function RegisterScreen() {
   value={special}
   onChangeText={setSpecial}
 />
+<View style={styles.consentContainer}>
+
+  <Pressable
+    style={styles.checkbox}
+    onPress={() => setConsent(!consent)}
+  >
+    {consent && <View style={styles.checkboxInner} />}
+  </Pressable>
+
+  <Text style={styles.consentText}>
+    Diese Angabe ist freiwillig. Du entscheidest selbst,
+    was du über dich teilen möchtest.
+  </Text>
+
+</View>
 
 <TouchableOpacity
   style={styles.registerButton}
@@ -138,4 +156,36 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
   },
+
+  consentContainer: {
+  flexDirection: "row",
+  alignItems: "flex-start",
+  marginBottom: 24,
+},
+
+checkbox: {
+  width: 24,
+  height: 24,
+  borderRadius: 8,
+  borderWidth: 2,
+  borderColor: "#8B5CF6",
+  marginRight: 14,
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: 2,
+},
+
+checkboxInner: {
+  width: 12,
+  height: 12,
+  borderRadius: 4,
+  backgroundColor: "#8B5CF6",
+},
+
+consentText: {
+  flex: 1,
+  fontSize: 14,
+  lineHeight: 22,
+  color: "#6E6480",
+},
 });

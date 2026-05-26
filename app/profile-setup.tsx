@@ -68,7 +68,6 @@ export default function ProfileSetupScreen() {
         <Text style={styles.progress}>
   Profil zu 70% vollständig
 </Text>
-
         <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
           {image ? (
             <Image source={{ uri: image }} style={styles.profileImage} />
@@ -76,6 +75,10 @@ export default function ProfileSetupScreen() {
             <Text style={styles.imageText}>Zeig dich, wie du bist</Text>
           )}
         </TouchableOpacity>
+
+        <Text style={styles.infoText}>
+  Du entscheidest selbst, was du über dich teilen möchtest.
+</Text>
 
         <Question
           label="Was sollte man über mich wissen?"
@@ -133,7 +136,7 @@ router.push({
 })
 }
         >
-          <Text style={styles.buttonText}>Profil erstellen</Text>
+          <Text style={styles.buttonText}>Profil speichern</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -280,5 +283,12 @@ const styles = StyleSheet.create({
 
 bigTextArea: {
   minHeight: 220,
+},
+
+infoText: {
+  fontSize: 15,
+  lineHeight: 24,
+  color: "#6E6480",
+  marginBottom: 34,
 },
 });
