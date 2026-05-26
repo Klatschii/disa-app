@@ -1,16 +1,17 @@
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 
 export default function ChatScreen() {
+  const { name } = useLocalSearchParams();
     const [message, setMessage] = useState("");
 const [messages, setMessages] = useState([
   {
@@ -52,7 +53,7 @@ const sendMessage = () => {
           <Text style={styles.back}>← Zurück</Text>
         </TouchableOpacity>
 
-        <Text style={styles.name}>Sarah</Text>
+        <Text style={styles.name}>{name}</Text>
 
         <View style={{ width: 60 }} />
       </View>

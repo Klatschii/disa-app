@@ -1,10 +1,10 @@
 import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { router, useLocalSearchParams } from "expo-router";
@@ -97,6 +97,15 @@ export default function ProfileScreen() {
 >
   <Text style={styles.buttonText}>
     Profil bearbeiten
+  </Text>
+</TouchableOpacity>
+
+<TouchableOpacity
+  style={styles.secondaryButton}
+  onPress={() => router.push("/settings")}
+>
+  <Text style={styles.secondaryButtonText}>
+    Einstellungen
   </Text>
 </TouchableOpacity>
       </ScrollView>
@@ -216,4 +225,19 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "700",
   },
+
+  secondaryButton: {
+  borderWidth: 2,
+  borderColor: "#C4B5FD",
+  paddingVertical: 18,
+  borderRadius: 20,
+  alignItems: "center",
+  marginTop: 14,
+},
+
+secondaryButtonText: {
+  color: "#7C3AED",
+  fontSize: 17,
+  fontWeight: "700",
+},
 });

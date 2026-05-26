@@ -1,33 +1,62 @@
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { router } from "expo-router";
 import BottomNav from "./bottom-nav";
 
+const chats = [
+  {
+    id: 1,
+    name: "Sarah",
+    preview: "Deine Antwort über Ehrlichkeit fand ich schön.",
+  },
+  {
+    id: 2,
+    name: "Mira",
+    preview: "Ich fand deinen Gedanken zu Offenheit echt stark.",
+  },
+  {
+    id: 3,
+    name: "Lena",
+    preview: "Das mit dem Lachen hat mich direkt abgeholt 😄",
+  },
+];
+
 export default function ChatsScreen() {
-return (
-  <View style={{ flex: 1 }}>
-    <View style={styles.container}>
-      <Text style={styles.title}>Chats</Text>
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Chats</Text>
 
-      <TouchableOpacity
-        style={styles.chatCard}
-        onPress={() => router.push("/chat")}
-      >
-        <Text style={styles.chatName}>Sarah</Text>
-        <Text style={styles.chatPreview}>
-          Deine Antwort über Ehrlichkeit fand ich schön.
-        </Text>
-      </TouchableOpacity>
+        {chats.map((chat) => (
+          <TouchableOpacity
+            key={chat.id}
+            style={styles.chatCard}
+            onPress={() =>
+              router.push({
+                pathname: "/chat",
+                params: {
+                  name: chat.name,
+                },
+              })
+            }
+          >
+            <Text style={styles.chatName}>{chat.name}</Text>
+
+            <Text style={styles.chatPreview}>
+              {chat.preview}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <BottomNav active="chats" />
     </View>
-
-    <BottomNav active="chats" />
-  </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({
@@ -49,6 +78,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 24,
     padding: 22,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#EFE7FF",
   },
 
   chatName: {
