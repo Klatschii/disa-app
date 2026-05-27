@@ -7,7 +7,9 @@ import {
   View,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import BottomNav from "./bottom-nav";
 
 export default function ProfileScreen() {
@@ -21,6 +23,30 @@ export default function ProfileScreen() {
     special,
   } = useLocalSearchParams();
 
+  const [savedProfile, setSavedProfile] = useState<any>(null);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const storedProfile = await AsyncStorage.getItem("userProfile");
+
+      if (storedProfile) {
+        setSavedProfile(JSON.parse(storedProfile));
+      }
+    };
+
+    loadProfile();
+  }, []);
+
+const displayedProfile = savedProfile || {
+  about,
+  proud,
+  relationship,
+  laugh,
+  dream,
+  image,
+  special,
+};
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -28,9 +54,9 @@ export default function ProfileScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {image ? (
+        {displayedProfile.image ? (
           <Image
-            source={{ uri: String(image) }}
+            source={{ uri: String(displayedProfile.image) }}
             style={styles.image}
           />
         ) : (
@@ -44,7 +70,7 @@ export default function ProfileScreen() {
         <Text style={styles.name}>Du</Text>
 
         <Text style={styles.special}>
-          Besonderheit: {String(special || "Noch keine Antwort.")}
+          Besonderheit: {String(displayedProfile.special || "Noch keine Antwort.")}
         </Text>
 
         <Text style={styles.quote}>
@@ -53,29 +79,29 @@ export default function ProfileScreen() {
 
         <ProfileBlock
           title="Was sollte man über mich wissen?"
-          text={String(about || "Noch nicht ausgefüllt.")}
+          text={String(displayedProfile.about || "Noch nicht ausgefüllt.")}
         />
 
         <ProfileBlock
           title="Auf was bin ich am meisten stolz?"
-          text={String(proud || "Noch nicht ausgefüllt.")}
+          text={String(displayedProfile.proud || "Noch nicht ausgefüllt.")}
         />
 
         <ProfileBlock
           title="Was wünsche ich mir in einer Beziehung?"
           text={String(
-            relationship || "Noch nicht ausgefüllt."
+            displayedProfile.relationship || "Noch nicht ausgefüllt."
           )}
         />
 
         <ProfileBlock
           title="Was bringt dich zum Lachen?"
-          text={String(laugh || "Noch nicht ausgefüllt.")}
+          text={String(displayedProfile.laugh || "Noch nicht ausgefüllt.")}
         />
 
         <ProfileBlock
           title="Wenn du alles machen könntest was du willst, was wäre es?"
-          text={String(dream || "Noch nicht ausgefüllt.")}
+          text={String(displayedProfile.dream || "Noch nicht ausgefüllt.")}
         />
 
 <TouchableOpacity

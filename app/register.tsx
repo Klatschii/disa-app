@@ -37,7 +37,7 @@ export default function RegisterScreen() {
       />
 
       <TextInput
-        placeholder="Alter"
+        placeholder="Geburtsdatum (TT.MM.JJJJ)"
         placeholderTextColor="#9CA3AF"
         keyboardType="number-pad"
         style={styles.input}

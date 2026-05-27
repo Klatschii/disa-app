@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Image,
@@ -19,12 +19,31 @@ import { router, useLocalSearchParams } from "expo-router";
 export default function ProfileSetupScreen() {
   const { special } = useLocalSearchParams();
   const [image, setImage] = useState<string | null>(null);
-
   const [about, setAbout] = useState("");
   const [proud, setProud] = useState("");
   const [relationship, setRelationship] = useState("");
   const [laugh, setLaugh] = useState("");
   const [dream, setDream] = useState("");
+
+  useEffect(() => {
+  const loadProfile = async () => {
+    const storedProfile =
+      await AsyncStorage.getItem("userProfile");
+
+    if (storedProfile) {
+      const profile = JSON.parse(storedProfile);
+
+      setAbout(profile.about || "");
+      setProud(profile.proud || "");
+      setRelationship(profile.relationship || "");
+      setLaugh(profile.laugh || "");
+      setDream(profile.dream || "");
+      setImage(profile.image || null);
+    }
+  };
+
+  loadProfile();
+}, []);
 
   const isFormValid =
     about.trim().length > 0 &&
@@ -124,17 +143,27 @@ export default function ProfileSetupScreen() {
           ]}
           onPress={async () => {
 
+const existingProfileRaw =
+  await AsyncStorage.getItem("userProfile");
+
+const existingProfile = existingProfileRaw
+  ? JSON.parse(existingProfileRaw)
+  : {};
+
+const updatedProfile = {
+  about: about.trim() || existingProfile.about || "",
+  proud: proud.trim() || existingProfile.proud || "",
+  relationship:
+    relationship.trim() || existingProfile.relationship || "",
+  laugh: laugh.trim() || existingProfile.laugh || "",
+  dream: dream.trim() || existingProfile.dream || "",
+  image: image || existingProfile.image || "",
+  special: String(special || existingProfile.special || ""),
+};
+
 await AsyncStorage.setItem(
   "userProfile",
-  JSON.stringify({
-    about,
-    proud,
-    relationship,
-    laugh,
-    dream,
-    image,
-    special,
-  })
+  JSON.stringify(updatedProfile)
 );
          
 router.push({
