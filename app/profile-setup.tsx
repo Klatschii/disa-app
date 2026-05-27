@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 
@@ -85,7 +86,7 @@ export default function ProfileSetupScreen() {
           big
           value={about}
           onChangeText={setAbout}
-          placeholder="Erzähl offen, was dich ausmacht..."
+          placeholder="Nimm dir ruhig etwas Platz. Erzähl ausführlicher, was Menschen über dich, deinen Alltag oder deine Besonderheiten oder Charaktereigenschaften wissen sollten..."
         />
 
         <Question
@@ -121,7 +122,21 @@ export default function ProfileSetupScreen() {
             styles.button,
             {backgroundColor: "#8B5CF6",},
           ]}
-          onPress={() =>
+          onPress={async () => {
+
+await AsyncStorage.setItem(
+  "userProfile",
+  JSON.stringify({
+    about,
+    proud,
+    relationship,
+    laugh,
+    dream,
+    image,
+    special,
+  })
+);
+         
 router.push({
   pathname: "/discover",
   params: {
@@ -134,7 +149,7 @@ router.push({
     special: String(special ?? ""),
   },
 })
-}
+}}
         >
           <Text style={styles.buttonText}>Profil speichern</Text>
         </TouchableOpacity>

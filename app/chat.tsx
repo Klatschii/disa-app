@@ -1,23 +1,38 @@
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import {
+  useRef,
+  useState,
+} from "react";
 import chatMessages from "./data/chatMessages";
+import profiles from "./data/profiles";
 
 export default function ChatScreen() {
   const { name } = useLocalSearchParams();
 
+  const profile = profiles.find(
+  (p) => p.name === name
+);
+  
   const initialMessages =
     chatMessages[String(name)] || [];
 
   const [message, setMessage] = useState("");
+
+  const [isTyping, setIsTyping] =
+  useState(false);
+  
+  const scrollRef =
+  useRef<ScrollView>(null);
 
   const [messages, setMessages] = useState<
     {
@@ -27,19 +42,48 @@ export default function ChatScreen() {
     }[]
   >(initialMessages);
 
-  const sendMessage = () => {
+const sendMessage = () => {
+  
   if (message.trim().length === 0) return;
+
+  const newMessage = {
+    id: Date.now(),
+    text: message,
+    type: "sent" as const,
+  };
 
   setMessages([
     ...messages,
-    {
-      id: Date.now(),
-      text: message,
-      type: "sent",
-    },
+    newMessage,
   ]);
 
+  setTimeout(() => {
+  scrollRef.current?.scrollToEnd({
+    animated: true,
+  });
+}, 100);
+
   setMessage("");
+
+  setIsTyping(true);
+
+setTimeout(() => {
+    setIsTyping(false);
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      {
+        id: Date.now() + 1,
+        text: "Das klingt schön. Erzähl mir mehr davon 😊",
+        type: "received" as const,
+      },
+    ]);
+
+    setTimeout(() => {
+  scrollRef.current?.scrollToEnd({
+    animated: true,
+  });
+}, 100);
+  }, 1200);
 };
   return (
     <View style={styles.container}>
@@ -51,13 +95,21 @@ export default function ChatScreen() {
 
         <Text style={styles.name}>{name}</Text>
 
-        <View style={{ width: 60 }} />
+        {profile?.image ? (
+  <Image
+    source={{ uri: profile.image }}
+    style={styles.headerImage}
+  />
+) : (
+  <View style={{ width: 46 }} />
+)}
       </View>
 
-      <ScrollView
-        style={styles.messages}
-        contentContainerStyle={styles.messagesContent}
-      >
+<ScrollView
+  ref={scrollRef}
+  style={styles.messages}
+  contentContainerStyle={styles.messagesContent}
+>
 
 {messages.map((msg) => (
   <View
@@ -80,6 +132,14 @@ export default function ChatScreen() {
   </View>
 ))}
 
+{isTyping && (
+  <View style={styles.typingBubble}>
+    <Text style={styles.typingText}>
+      tippt gerade...
+    </Text>
+  </View>
+)}
+
       </ScrollView>
 
       <View style={styles.inputContainer}>
@@ -92,7 +152,11 @@ export default function ChatScreen() {
 />
 
 <TouchableOpacity
-  style={styles.sendButton}
+  style={[
+  styles.sendButton,
+  message.trim().length === 0 &&
+    styles.sendButtonDisabled,
+]}
   onPress={sendMessage}
 >
   <Text style={styles.sendText}>Senden</Text>
@@ -202,4 +266,31 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "700",
   },
+
+  typingBubble: {
+  backgroundColor: "#FFFFFF",
+  padding: 14,
+  borderRadius: 18,
+  borderBottomLeftRadius: 6,
+  alignSelf: "flex-start",
+  marginTop: 4,
+  maxWidth: "60%",
+},
+
+typingText: {
+  color: "#8C84A1",
+  fontSize: 14,
+  fontStyle: "italic",
+},
+
+sendButtonDisabled: {
+  opacity: 0.5,
+},
+
+headerImage: {
+  width: 46,
+  height: 46,
+  borderRadius: 23,
+  marginBottom: 6,
+},
 });

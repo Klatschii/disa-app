@@ -1,13 +1,18 @@
 import {
+  Animated,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ProfileCard from "../components/ProfileCard";
 import BottomNav from "./bottom-nav";
 import conditionInfo from "./data/conditionInfo";
@@ -15,6 +20,8 @@ import profiles from "./data/profiles";
 import userPreferences from "./data/userPreferences";
 
 export default function DiscoverScreen() {
+  const fadeAnim =
+  useRef(new Animated.Value(1)).current;
   const [currentIndex, setCurrentIndex] = useState(0);
   const filteredProfiles = profiles.filter(
   (profile) => {
@@ -76,8 +83,24 @@ export default function DiscoverScreen() {
   useEffect(() => {
   setCurrentIndex(0);
 }, [userPreferences.lookingFor]);
-  const nextProfile = () => {
-  setCurrentIndex((currentIndex + 1) % filteredProfiles.length);
+
+const nextProfile = () => {
+  Animated.timing(fadeAnim, {
+    toValue: 0,
+    duration: 180,
+    useNativeDriver: true,
+  }).start(() => {
+    setCurrentIndex(
+      (currentIndex + 1) %
+        filteredProfiles.length
+    );
+
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 240,
+      useNativeDriver: true,
+    }).start();
+  });
 };
 
  return (
@@ -96,27 +119,33 @@ export default function DiscoverScreen() {
   Nimm dir Zeit, jemanden wirklich kennenzulernen.
 </Text>
 
-<ProfileCard
-  profile={profile}
-  onInfoPress={() => {
-    const info = conditionInfo[profile.special];
-
-    if (info) {
-      alert(
-        `${info.title}\n\n${info.short}\n\n${info.respect}`
-      );
-    }
+<Animated.View
+  style={{
+    opacity: fadeAnim,
   }}
-  onNext={nextProfile}
-  onMeet={() =>
-    router.push({
-      pathname: "/chat",
-      params: {
-        name: profile.name,
-      },
-    })
-  }
-/>
+>
+  <ProfileCard
+    profile={profile}
+    onInfoPress={() => {
+      const info = conditionInfo[profile.special];
+
+      if (info) {
+        alert(
+          `${info.title}\n\n${info.short}\n\n${info.respect}`
+        );
+      }
+    }}
+    onNext={nextProfile}
+    onMeet={() =>
+      router.push({
+        pathname: "/chat",
+        params: {
+          name: profile.name,
+        },
+      })
+    }
+  />
+</Animated.View>
     </ScrollView>
 <BottomNav active="discover" />
 </View>
