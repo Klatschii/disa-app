@@ -1,26 +1,85 @@
 import {
-  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
-import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import ProfileAnswer from "../components/ProfileAnswer";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import ProfileCard from "../components/ProfileCard";
 import BottomNav from "./bottom-nav";
+import conditionInfo from "./data/conditionInfo";
 import profiles from "./data/profiles";
+import userPreferences from "./data/userPreferences";
 
 export default function DiscoverScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const profile = profiles[currentIndex];
+  const filteredProfiles = profiles.filter(
+  (profile) => {
+    if (
+      userPreferences.lookingFor === "Alle"
+    ) {
+      return true;
+    }
+
+    if (
+      userPreferences.lookingFor ===
+      "Frauen"
+    ) {
+      return (
+        profile.gender === "woman"
+      );
+    }
+
+    if (
+      userPreferences.lookingFor ===
+      "Männer"
+    ) {
+      return (
+        profile.gender === "man"
+      );
+    }
+
+    return true;
+  }
+);
+  const profile =
+  filteredProfiles[currentIndex];
+  if (!profile) {
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyTitle}>
+          Noch keine passenden Profile
+        </Text>
+
+        <Text style={styles.emptyText}>
+          Ändere deine Sucheinstellungen oder schau später wieder vorbei.
+        </Text>
+
+        <TouchableOpacity
+          style={styles.emptyButton}
+          onPress={() => router.push("/settings")}
+        >
+          <Text style={styles.emptyButtonText}>
+            Sucheinstellungen ändern
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <BottomNav active="discover" />
+    </View>
+  );
+}
+  useEffect(() => {
+  setCurrentIndex(0);
+}, [userPreferences.lookingFor]);
   const nextProfile = () => {
-  setCurrentIndex((currentIndex + 1) % profiles.length);
+  setCurrentIndex((currentIndex + 1) % filteredProfiles.length);
 };
-  useLocalSearchParams();
-  
+
  return (
   <View style={{ flex: 1 }}>
 
@@ -37,80 +96,27 @@ export default function DiscoverScreen() {
   Nimm dir Zeit, jemanden wirklich kennenzulernen.
 </Text>
 
-      <View style={styles.card}>
-        <Text style={styles.name}>
-  {profile.name}, {profile.age}
-</Text>
+<ProfileCard
+  profile={profile}
+  onInfoPress={() => {
+    const info = conditionInfo[profile.special];
 
-<Text style={styles.special}>
-  Besonderheit: {String(profile.special || "Noch keine Antwort.")}
-</Text>
-
-<ProfileAnswer
-  question="Was sollte man über mich wissen?"
-  answer={String(profile.about)}
+    if (info) {
+      alert(
+        `${info.title}\n\n${info.short}\n\n${info.respect}`
+      );
+    }
+  }}
+  onNext={nextProfile}
+  onMeet={() =>
+    router.push({
+      pathname: "/chat",
+      params: {
+        name: profile.name,
+      },
+    })
+  }
 />
-
-<ProfileAnswer
-  question="Auf was bin ich am meisten stolz?"
-  answer={String(profile.proud)}
-/>
-
-<ProfileAnswer
-  question="Was wünsche ich mir in einer Beziehung?"
-  answer={String(profile.relationship)}
-/>
-
-<ProfileAnswer
-  question="Was bringt dich zum Lachen?"
-  answer={String(profile.laugh)}
-/>
-
-<ProfileAnswer
-  question="Wenn du alles machen könntest was du willst, was wäre es?"
-  answer={String(profile.dream)}
-/>
-
-{profile.image ? (
-  <View>
-
-    <Text style={styles.imageLabel}>
-      Ein ehrlicher Blick.
-    </Text>
-
-    <Image
-      source={{
-        uri: String(profile.image),
-      }}
-      style={styles.image}
-    />
-
-  </View>
-) : null}
-
-<TouchableOpacity
-  style={styles.nextButton}
-  onPress={nextProfile}
->
-  <Text style={styles.nextButtonText}>
-    Nächstes Profil
-  </Text>
-</TouchableOpacity>
-
-<TouchableOpacity
-  style={styles.button}
-  onPress={() =>
-  router.push({
-    pathname: "/chat",
-    params: {
-      name: profile.name,
-    },
-  })
-}
-  >
-          <Text style={styles.buttonText}>Kennenlernen</Text>
-        </TouchableOpacity>
-      </View>
     </ScrollView>
 <BottomNav active="discover" />
 </View>
@@ -139,65 +145,6 @@ title: {
   textAlign: "center",
 },
 
-card: {
-  backgroundColor: "#FFFFFF",
-  borderRadius: 30,
-  padding: 24,
-
-  paddingTop: 32,
-  paddingBottom: 34,
-  paddingHorizontal: 28,
-  marginBottom: 40,
-
-  borderWidth: 1,
-  borderColor: "#EFE7FF",
-
-  shadowColor: "#000",
-  shadowOpacity: 0.08,
-  shadowRadius: 12,
-  shadowOffset: {
-    width: 100,
-    height: 4,
-  },
-},
-
-  name: {
-    textAlign: "center",
-    fontSize: 30,
-    fontWeight: "700",
-    color: "#2B2238",
-    marginBottom: 10,
-  },
-
-special: {
-  fontSize: 14,
-  color: "#8C84A1",
-  fontWeight: "600",
-  marginBottom: 32,
-  textAlign: "center",
-},
-
-image: {
-  width: "100%",
-  height: 320,
-  borderRadius: 24,
-  marginTop: 14,
-  marginBottom: 30,
-},
-
-  button: {
-    backgroundColor: "#8B5CF6",
-    paddingVertical: 18,
-    borderRadius: 18,
-    alignItems: "center",
-  },
-
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "700",
-  },
-
 subtitle: {
   fontSize: 16,
   color: "#6E6480",
@@ -207,27 +154,39 @@ subtitle: {
   paddingHorizontal: 20,
 },
 
-imageLabel: {
-  fontSize: 14,
-  color: "#8C84A1",
-  fontWeight: "600",
-  marginBottom: 12,
+emptyContainer: {
+  flex: 1,
+  backgroundColor: "#F7F3FF",
+  padding: 28,
+  justifyContent: "center",
+},
+
+emptyTitle: {
+  fontSize: 30,
+  fontWeight: "700",
+  color: "#2B2238",
   textAlign: "center",
-  paddingHorizontal: 18,
+  marginBottom: 16,
 },
 
-nextButton: {
-  borderWidth: 2,
-  borderColor: "#C4B5FD",
-  paddingVertical: 16,
-  borderRadius: 18,
-  alignItems: "center",
-  marginBottom: 14,
-},
-
-nextButtonText: {
-  color: "#7C3AED",
+emptyText: {
   fontSize: 16,
+  color: "#6E6480",
+  lineHeight: 24,
+  textAlign: "center",
+  marginBottom: 34,
+},
+
+emptyButton: {
+  backgroundColor: "#8B5CF6",
+  paddingVertical: 18,
+  borderRadius: 20,
+  alignItems: "center",
+},
+
+emptyButtonText: {
+  color: "#FFFFFF",
+  fontSize: 17,
   fontWeight: "700",
 },
 });

@@ -1,14 +1,15 @@
 import {
-    Pressable,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 import { router } from "expo-router";
 import { useState } from "react";
 import BottomNav from "./bottom-nav";
+import userPreferences from "./data/userPreferences";
 
 export default function SettingsScreen() {
     function OptionGroup({
@@ -51,8 +52,8 @@ export default function SettingsScreen() {
   );
 }
     const [privacyConsent, setPrivacyConsent] = useState(true);
-    const [gender, setGender] = useState("Mann");
-    const [lookingFor, setLookingFor] = useState("Frauen");
+const [gender, setGender] = useState(userPreferences.gender);
+const [lookingFor, setLookingFor] = useState(userPreferences.lookingFor);
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -66,14 +67,20 @@ export default function SettingsScreen() {
   title="Ich bin"
   options={["Mann", "Frau", "Divers"]}
   selected={gender}
-  onSelect={setGender}
+  onSelect={(value) => {
+  setGender(value);
+  userPreferences.gender = value;
+}}
 />
 
 <OptionGroup
   title="Ich suche"
   options={["Frauen", "Männer", "Alle"]}
   selected={lookingFor}
-  onSelect={setLookingFor}
+  onSelect={(value) => {
+  setLookingFor(value);
+  userPreferences.lookingFor = value;
+}}
 />
 
         <SettingBlock

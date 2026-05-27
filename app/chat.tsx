@@ -9,29 +9,25 @@ import {
 
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
+import chatMessages from "./data/chatMessages";
 
 export default function ChatScreen() {
   const { name } = useLocalSearchParams();
-    const [message, setMessage] = useState("");
-const [messages, setMessages] = useState([
-  {
-    id: 1,
-    text: "Hey 😊",
-    type: "received",
-  },
-  {
-    id: 2,
-    text: "Deine Antwort über Ehrlichkeit fand ich schön.",
-    type: "received",
-  },
-  {
-    id: 3,
-    text: "Danke 😄 Das bedeutet mir echt viel.",
-    type: "sent",
-  },
-]);
 
-const sendMessage = () => {
+  const initialMessages =
+    chatMessages[String(name)] || [];
+
+  const [message, setMessage] = useState("");
+
+  const [messages, setMessages] = useState<
+    {
+      id: number;
+      text: string;
+      type: "sent" | "received";
+    }[]
+  >(initialMessages);
+
+  const sendMessage = () => {
   if (message.trim().length === 0) return;
 
   setMessages([

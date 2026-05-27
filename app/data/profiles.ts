@@ -4,6 +4,7 @@ const profiles = [
     name: "Sarah",
     age: 26,
     special: "Brachydaktylie",
+    gender: "woman",
     image:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800",
     about:
@@ -23,6 +24,7 @@ const profiles = [
     name: "Mira",
     age: 29,
     special: "sichtbare Narbe",
+    gender: "woman",
     image:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
     about:
@@ -42,6 +44,7 @@ const profiles = [
     name: "Lena",
     age: 24,
     special: "chronische Erkrankung",
+    gender: "woman",
     image:
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800",
     about:
@@ -55,6 +58,34 @@ const profiles = [
     dream:
       "Einmal für mehrere Monate durch Europa reisen.",
   },
+
+    {
+  id: 4,
+  name: "Daniel",
+  age: 31,
+
+  gender: "man",
+
+  special: "Hörgerät",
+
+  image:
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800",
+
+  about:
+    "Ich höre nicht perfekt, aber ich glaube, gute Gespräche hängen sowieso mehr vom Zuhören als vom Hören ab.",
+
+  proud:
+    "Dass ich gelernt habe, offener über Unsicherheiten zu sprechen.",
+
+  relationship:
+    "Ruhe, Ehrlichkeit und gegenseitiger Respekt.",
+
+  laugh:
+    "Trockener Humor und absurde Alltagssituationen.",
+
+  dream:
+    "Irgendwann am Meer wohnen und weniger gehetzt leben.",
+},
 ];
 
 export default profiles;

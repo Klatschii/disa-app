@@ -7,24 +7,7 @@ import {
 
 import { router } from "expo-router";
 import BottomNav from "./bottom-nav";
-
-const chats = [
-  {
-    id: 1,
-    name: "Sarah",
-    preview: "Deine Antwort über Ehrlichkeit fand ich schön.",
-  },
-  {
-    id: 2,
-    name: "Mira",
-    preview: "Ich fand deinen Gedanken zu Offenheit echt stark.",
-  },
-  {
-    id: 3,
-    name: "Lena",
-    preview: "Das mit dem Lachen hat mich direkt abgeholt 😄",
-  },
-];
+import chats from "./data/chats";
 
 export default function ChatsScreen() {
   return (
@@ -46,10 +29,7 @@ export default function ChatsScreen() {
             }
           >
             <Text style={styles.chatName}>{chat.name}</Text>
-
-            <Text style={styles.chatPreview}>
-              {chat.preview}
-            </Text>
+            <Text style={styles.chatPreview}>{chat.preview}</Text>
           </TouchableOpacity>
         ))}
       </View>
