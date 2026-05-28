@@ -134,6 +134,17 @@ const displayedProfile = savedProfile || {
     Einstellungen
   </Text>
 </TouchableOpacity>
+
+      <TouchableOpacity
+  style={styles.logoutButton}
+onPress={async () => {
+  router.replace("/login");
+}}
+>
+  <Text style={styles.logoutButtonText}>
+    Abmelden
+  </Text>
+</TouchableOpacity>
       </ScrollView>
 
       <BottomNav active="profile" />
@@ -166,7 +177,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 24,
     paddingTop: 80,
-    paddingBottom: 50,
+    paddingBottom: 6,
   },
 
   image: {
@@ -264,6 +275,21 @@ const styles = StyleSheet.create({
 secondaryButtonText: {
   color: "#7C3AED",
   fontSize: 17,
+  fontWeight: "700",
+},
+
+logoutButton: {
+  backgroundColor: "#F3EDFF",
+  borderRadius: 16,
+  paddingVertical: 12,
+  alignItems: "center",
+  marginTop: 12,
+  marginBottom: 30,
+},
+
+logoutButtonText: {
+  color: "#7C3AED",
+  fontSize: 15,
   fontWeight: "700",
 },
 });

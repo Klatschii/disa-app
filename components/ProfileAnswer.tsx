@@ -1,7 +1,7 @@
 import {
-    StyleSheet,
-    Text,
-    View,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 export default function ProfileAnswer({
@@ -31,8 +31,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     borderWidth: 1,
     borderColor: "#EFE7FF",
-    marginLeft: -18,
-    marginRight: -18,
   },
 
   question: {

@@ -1,9 +1,9 @@
 import {
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import ProfileAnswer from "./ProfileAnswer";
@@ -85,23 +85,23 @@ export default function ProfileCard({
         </View>
       ) : null}
 
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={onNext}
-      >
-        <Text style={styles.nextButtonText}>
-          Nächstes Profil
-        </Text>
-      </TouchableOpacity>
+<TouchableOpacity
+  style={styles.button}
+  onPress={onMeet}
+>
+  <Text style={styles.buttonText}>
+    Kennenlernen
+  </Text>
+</TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={onMeet}
-      >
-        <Text style={styles.buttonText}>
-          Kennenlernen
-        </Text>
-      </TouchableOpacity>
+<TouchableOpacity
+  style={styles.nextButton}
+  onPress={onNext}
+>
+  <Text style={styles.nextButtonText}>
+    Weiter suchen
+  </Text>
+</TouchableOpacity>
     </View>
   );
 }
@@ -118,12 +118,14 @@ const styles = StyleSheet.create({
     borderColor: "#EFE7FF",
     shadowColor: "#000",
     shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowRadius: 18,
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 8,
     },
-    marginBottom: 40,
+    elevation: 6,
+    overflow: "visible",
+    marginBottom: 12,
   },
 
   name: {
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#8C84A1",
     fontWeight: "600",
-    marginBottom: 12,
+    marginBottom: 8,
     textAlign: "center",
   },
 
@@ -171,14 +173,14 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 
-  nextButton: {
-    borderWidth: 2,
-    borderColor: "#C4B5FD",
-    paddingVertical: 16,
-    borderRadius: 18,
-    alignItems: "center",
-    marginBottom: 14,
-  },
+nextButton: {
+  borderWidth: 2,
+  borderColor: "#C4B5FD",
+  paddingVertical: 16,
+  borderRadius: 18,
+  alignItems: "center",
+  marginTop: 14,
+},
 
   nextButtonText: {
     color: "#7C3AED",

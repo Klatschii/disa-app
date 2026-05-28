@@ -1,11 +1,12 @@
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 
 export default function LoginScreen() {
@@ -38,11 +39,23 @@ export default function LoginScreen() {
         style={styles.input}
       />
 
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>
-          Anmelden
-        </Text>
-      </TouchableOpacity>
+<TouchableOpacity
+  style={styles.loginButton}
+ onPress={async () => {
+  const storedProfile =
+    await AsyncStorage.getItem("userProfile");
+
+  if (storedProfile) {
+    router.replace("/discover");
+  } else {
+    router.push("/register");
+  }
+}}
+>
+  <Text style={styles.loginButtonText}>
+    Anmelden
+  </Text>
+</TouchableOpacity>
 
       <TouchableOpacity>
         <Text style={styles.forgotPassword}>

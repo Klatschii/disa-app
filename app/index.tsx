@@ -6,16 +6,32 @@ import {
   View,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { useEffect } from "react";
 
 export default function WelcomeScreen() {
+  useEffect(() => {
+  const checkProfile = async () => {
+    const storedProfile = await AsyncStorage.getItem("userProfile");
+
+    if (storedProfile) {
+      router.replace("/discover");
+    }
+  };
+
+  checkProfile();
+}, []);
   return (
     <View style={styles.container}>
       
-      <Image
-        source={require("../assets/logo.png")}
-        style={styles.logo}
-      />
+<View style={styles.logoContainer}>
+  <Image
+    source={require("../assets/logo-1.png")}
+    style={styles.logo}
+    resizeMode="contain"
+  />
+</View>
 
       <Text style={styles.headline}>
         Mehr Persönlichkeit{"\n"}als Perfektion.
@@ -58,12 +74,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
   },
 
-  logo: {
-    width: 230,
-    height: 230,
-    resizeMode: "contain",
-    marginBottom: 30,
-  },
+logoContainer: {
+  width: 300,
+  height: 300,
+  borderRadius: 150,
+  overflow: "hidden",
+  alignSelf: "center",
+  marginBottom: 28,
+},
+
+logo: {
+  width: "100%",
+  height: "100%",
+},
 
   headline: {
     fontSize: 32,

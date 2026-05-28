@@ -136,52 +136,51 @@ export default function ProfileSetupScreen() {
           placeholder="Was würdest du tun, wenn alles möglich wäre?"
         />
 
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {backgroundColor: "#8B5CF6",},
-          ]}
-          onPress={async () => {
+<TouchableOpacity
+  style={[
+    styles.button,
+    { backgroundColor: "#8B5CF6" },
+  ]}
+  onPress={async () => {
+    try {
+      const existingProfileRaw =
+        await AsyncStorage.getItem("userProfile");
 
-const existingProfileRaw =
-  await AsyncStorage.getItem("userProfile");
+      const existingProfile = existingProfileRaw
+        ? JSON.parse(existingProfileRaw)
+        : {};
 
-const existingProfile = existingProfileRaw
-  ? JSON.parse(existingProfileRaw)
-  : {};
+      const updatedProfile = {
+        about: about.trim() || existingProfile.about || "",
+        proud: proud.trim() || existingProfile.proud || "",
+        relationship:
+          relationship.trim() || existingProfile.relationship || "",
+        laugh: laugh.trim() || existingProfile.laugh || "",
+        dream: dream.trim() || existingProfile.dream || "",
+        image: image || existingProfile.image || "",
+        special: String(special || existingProfile.special || ""),
+      };
 
-const updatedProfile = {
-  about: about.trim() || existingProfile.about || "",
-  proud: proud.trim() || existingProfile.proud || "",
-  relationship:
-    relationship.trim() || existingProfile.relationship || "",
-  laugh: laugh.trim() || existingProfile.laugh || "",
-  dream: dream.trim() || existingProfile.dream || "",
-  image: image || existingProfile.image || "",
-  special: String(special || existingProfile.special || ""),
-};
+      await AsyncStorage.setItem(
+        "userProfile",
+        JSON.stringify(updatedProfile)
+      );
 
-await AsyncStorage.setItem(
-  "userProfile",
-  JSON.stringify(updatedProfile)
-);
-         
-router.push({
-  pathname: "/discover",
-  params: {
-    about,
-    proud,
-    relationship,
-    laugh,
-    dream,
-    image: image ?? "",
-    special: String(special ?? ""),
-  },
-})
-}}
-        >
-          <Text style={styles.buttonText}>Profil speichern</Text>
-        </TouchableOpacity>
+      const test = await AsyncStorage.getItem("userProfile");
+
+      alert(test ? "Gespeichert!" : "NICHT gespeichert");
+
+      router.replace({
+        pathname: "/discover",
+        params: updatedProfile,
+      });
+    } catch (error) {
+      alert("Fehler beim Speichern");
+    }
+  }}
+>
+  <Text style={styles.buttonText}>Profil speichern</Text>
+</TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );

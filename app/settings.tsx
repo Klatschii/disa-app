@@ -1,4 +1,5 @@
 import {
+  Alert,
   Pressable,
   StyleSheet,
   Text,
@@ -6,6 +7,7 @@ import {
   View
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useState } from "react";
 import BottomNav from "./bottom-nav";
@@ -100,6 +102,34 @@ const [lookingFor, setLookingFor] = useState(userPreferences.lookingFor);
     Ich verstehe, dass Angaben zu Besonderheiten freiwillig sind und ich sie später ändern oder löschen kann.
   </Text>
 </View>
+
+      <TouchableOpacity
+  style={styles.deleteButton}
+  onPress={() => {
+    Alert.alert(
+      "Profil löschen?",
+      "Dein gespeichertes Profil wird dauerhaft von diesem Gerät entfernt.",
+      [
+        {
+          text: "Abbrechen",
+          style: "cancel",
+        },
+        {
+          text: "Löschen",
+          style: "destructive",
+          onPress: async () => {
+            await AsyncStorage.removeItem("userProfile");
+            router.replace("/");
+          },
+        },
+      ]
+    );
+  }}
+>
+  <Text style={styles.deleteButtonText}>
+    Profil löschen
+  </Text>
+</TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
@@ -249,5 +279,20 @@ optionText: {
 
 optionTextActive: {
   color: "#FFFFFF",
+},
+
+deleteButton: {
+  borderWidth: 1,
+  borderColor: "#FCA5A5",
+  paddingVertical: 14,
+  borderRadius: 16,
+  alignItems: "center",
+  marginTop: 18,
+},
+
+deleteButtonText: {
+  color: "#B91C1C",
+  fontSize: 15,
+  fontWeight: "700",
 },
 });
