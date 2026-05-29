@@ -22,6 +22,7 @@ import userPreferences from "./data/userPreferences";
 export default function DiscoverScreen() {
   const fadeAnim =
   useRef(new Animated.Value(1)).current;
+  const scrollRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const filteredProfiles = profiles.filter(
   (profile) => {
@@ -85,6 +86,11 @@ export default function DiscoverScreen() {
 }, [userPreferences.lookingFor]);
 
 const nextProfile = () => {
+  scrollRef.current?.scrollTo({
+    y: 0,
+    animated: true,
+  });
+
   Animated.timing(fadeAnim, {
     toValue: 0,
     duration: 180,
@@ -107,6 +113,7 @@ const nextProfile = () => {
   <View style={{ flex: 1 }}>
 
 <ScrollView
+  ref={scrollRef}
   style={styles.container}
   contentContainerStyle={styles.content}
   showsVerticalScrollIndicator={false}

@@ -17,7 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 
 export default function ProfileSetupScreen() {
-  const { special } = useLocalSearchParams();
+  const { special, birthdate } = useLocalSearchParams();
   const [image, setImage] = useState<string | null>(null);
   const [about, setAbout] = useState("");
   const [proud, setProud] = useState("");
@@ -159,6 +159,7 @@ export default function ProfileSetupScreen() {
         dream: dream.trim() || existingProfile.dream || "",
         image: image || existingProfile.image || "",
         special: String(special || existingProfile.special || ""),
+        birthdate: String(birthdate || existingProfile.birthdate || "")
       };
 
       await AsyncStorage.setItem(
@@ -166,16 +167,11 @@ export default function ProfileSetupScreen() {
         JSON.stringify(updatedProfile)
       );
 
-      const test = await AsyncStorage.getItem("userProfile");
-
-      alert(test ? "Gespeichert!" : "NICHT gespeichert");
-
       router.replace({
         pathname: "/discover",
         params: updatedProfile,
       });
     } catch (error) {
-      alert("Fehler beim Speichern");
     }
   }}
 >

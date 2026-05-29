@@ -1,10 +1,11 @@
 import {
   Alert,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -57,8 +58,19 @@ export default function SettingsScreen() {
 const [gender, setGender] = useState(userPreferences.gender);
 const [lookingFor, setLookingFor] = useState(userPreferences.lookingFor);
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.container}>
+<View style={{ flex: 1 }}>
+  <ScrollView
+    style={styles.container}
+    contentContainerStyle={{ paddingBottom: 20 }}
+    showsVerticalScrollIndicator={false}
+  >
+       <TouchableOpacity
+    onPress={() => router.back()}
+    style={styles.backButton}
+  >
+    <Text style={styles.backText}>← Zurück</Text>
+  </TouchableOpacity>
+
         <Text style={styles.title}>Einstellungen</Text>
 
         <Text style={styles.subtitle}>
@@ -130,14 +142,7 @@ const [lookingFor, setLookingFor] = useState(userPreferences.lookingFor);
     Profil löschen
   </Text>
 </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.buttonText}>Zurück</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
 
       <BottomNav active="profile" />
     </View>
@@ -164,7 +169,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F7F3FF",
     padding: 24,
-    paddingTop: 80,
+    paddingTop: 30,
   },
 
   title: {
@@ -201,20 +206,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#6E6480",
     lineHeight: 22,
-  },
-
-  button: {
-    backgroundColor: "#8B5CF6",
-    paddingVertical: 18,
-    borderRadius: 20,
-    alignItems: "center",
-    marginTop: 18,
-  },
-
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 17,
-    fontWeight: "700",
   },
 
   consentBox: {
@@ -294,5 +285,17 @@ deleteButtonText: {
   color: "#B91C1C",
   fontSize: 15,
   fontWeight: "700",
+},
+
+backButton: {
+  marginTop: 60,
+  marginLeft: 24,
+  marginBottom: 20,
+},
+
+backText: {
+  fontSize: 16,
+  color: "#7C3AED",
+  fontWeight: "600",
 },
 });

@@ -13,13 +13,6 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
 
-      <TouchableOpacity
-        onPress={() => router.back()}
-        style={styles.backButton}
-      >
-        <Text style={styles.backText}>← Zurück</Text>
-      </TouchableOpacity>
-
       <Text style={styles.title}>Willkommen zurück</Text>
 
       <Text style={styles.subtitle}>

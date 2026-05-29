@@ -9,11 +9,13 @@ import {
   View
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useState } from "react";
 
 export default function RegisterScreen() {
     const [special, setSpecial] = useState("");
+    const [birthdate, setBirthdate] = useState("");
     const [consent, setConsent] = useState(false);
   return (
     <KeyboardAvoidingView
@@ -41,6 +43,8 @@ export default function RegisterScreen() {
         placeholderTextColor="#9CA3AF"
         keyboardType="number-pad"
         style={styles.input}
+        value={birthdate}
+        onChangeText={setBirthdate}
       />
 
       <TextInput
@@ -83,14 +87,27 @@ export default function RegisterScreen() {
 
 <TouchableOpacity
   style={styles.registerButton}
-  onPress={() =>
-    router.push({
-      pathname: "/profile-setup",
-      params: {
-        special,
-      },
-    })
-  }
+  onPress={async () => {
+    await AsyncStorage.setItem(
+      "registerData",
+JSON.stringify({
+  special,
+  consent,
+  birthdate,
+})
+    );
+    
+alert(birthdate);
+
+router.push({
+  
+  pathname: "/profile-setup",
+  params: {
+    special,
+    birthdate,
+  },
+})
+  }}
 >
         <Text style={styles.registerButtonText}>Weiter</Text>
       </TouchableOpacity>

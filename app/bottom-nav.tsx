@@ -1,8 +1,8 @@
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { router } from "expo-router";
@@ -20,7 +20,11 @@ export default function BottomNav({
     styles.item,
     active === "discover" && styles.activeItem,
   ]}
-  onPress={() => router.push("/discover")}
+  onPress={() => {
+  if (active !== "discover") {
+    router.push("/discover");
+  }
+}}
 >
  <Text
   style={[
@@ -37,7 +41,11 @@ export default function BottomNav({
     styles.item,
     active === "chats" && styles.activeItem,
   ]}
-  onPress={() => router.push("/chats")}
+  onPress={() => {
+  if (active !== "chats") {
+    router.push("/chats");
+  }
+}}
 >
 <Text
   style={[
@@ -54,7 +62,11 @@ export default function BottomNav({
     styles.item,
     active === "profile" && styles.activeItem,
   ]}
-  onPress={() => router.push("/profile")}
+  onPress={() => {
+  if (active !== "profile") {
+    router.push("/profile");
+  }
+}}
 >
 <Text
   style={[

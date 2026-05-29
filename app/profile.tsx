@@ -9,7 +9,7 @@ import {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BottomNav from "./bottom-nav";
 
 export default function ProfileScreen() {
@@ -24,6 +24,7 @@ export default function ProfileScreen() {
   } = useLocalSearchParams();
 
   const [savedProfile, setSavedProfile] = useState<any>(null);
+  const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -47,13 +48,51 @@ const displayedProfile = savedProfile || {
   special,
 };
 
+let age = "";
+
+if (displayedProfile.birthdate) {
+const birth = String(displayedProfile.birthdate);
+
+if (birth.length === 8) {
+  const day = Number(birth.slice(0, 2));
+  const month = Number(birth.slice(2, 4));
+  const year = Number(birth.slice(4, 8));
+
+  const birthDate = new Date(
+    year,
+    month - 1,
+    day
+  );
+
+  const today = new Date();
+
+  age = String(
+    today.getFullYear() - birthDate.getFullYear()
+  );
+
+  const monthDiff =
+    today.getMonth() - birthDate.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (
+      monthDiff === 0 &&
+      today.getDate() < birthDate.getDate()
+    )
+  ) {
+    age = String(Number(age) - 1);
+  }
+}
+}
+
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+<ScrollView
+  ref={scrollRef}
+  style={styles.container}
+  contentContainerStyle={styles.content}
+  showsVerticalScrollIndicator={false}
+>
         {displayedProfile.image ? (
           <Image
             source={{ uri: String(displayedProfile.image) }}
@@ -67,7 +106,9 @@ const displayedProfile = savedProfile || {
           </View>
         )}
 
-        <Text style={styles.name}>Du</Text>
+        <Text style={styles.name}>
+  Du{age ? `, ${age}` : ""}
+</Text>
 
         <Text style={styles.special}>
           Besonderheit: {String(displayedProfile.special || "Noch keine Antwort.")}
@@ -128,7 +169,14 @@ const displayedProfile = savedProfile || {
 
 <TouchableOpacity
   style={styles.secondaryButton}
-  onPress={() => router.push("/settings")}
+onPress={() => {
+  scrollRef.current?.scrollTo({
+    y: 0,
+    animated: false,
+  });
+
+  router.push("/settings");
+}}
 >
   <Text style={styles.secondaryButtonText}>
     Einstellungen
