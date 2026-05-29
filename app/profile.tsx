@@ -106,8 +106,9 @@ if (birth.length === 8) {
           </View>
         )}
 
-        <Text style={styles.name}>
-  Du{age ? `, ${age}` : ""}
+<Text style={styles.name}>
+  {String(displayedProfile.name || "Du")}
+  {age ? `, ${age}` : ""}
 </Text>
 
         <Text style={styles.special}>

@@ -10,11 +10,12 @@ import {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BottomNav from "./bottom-nav";
 import userPreferences from "./data/userPreferences";
 
 export default function SettingsScreen() {
+  
     function OptionGroup({
   title,
   options,
@@ -54,9 +55,29 @@ export default function SettingsScreen() {
     </View>
   );
 }
-    const [privacyConsent, setPrivacyConsent] = useState(true);
+
+const [privacyConsent, setPrivacyConsent] = useState(true);
 const [gender, setGender] = useState(userPreferences.gender);
 const [lookingFor, setLookingFor] = useState(userPreferences.lookingFor);
+useEffect(() => {
+  const loadPreferences = async () => {
+    const storedPreferences =
+      await AsyncStorage.getItem("userPreferences");
+
+    if (storedPreferences) {
+      const preferences = JSON.parse(storedPreferences);
+
+      setGender(preferences.gender || "Mann");
+      setLookingFor(preferences.lookingFor || "Frauen");
+
+      userPreferences.gender = preferences.gender || "Mann";
+      userPreferences.lookingFor =
+        preferences.lookingFor || "Frauen";
+    }
+  };
+
+  loadPreferences();
+}, []);
   return (
 <View style={{ flex: 1 }}>
   <ScrollView
@@ -81,9 +102,17 @@ const [lookingFor, setLookingFor] = useState(userPreferences.lookingFor);
   title="Ich bin"
   options={["Mann", "Frau", "Divers"]}
   selected={gender}
-  onSelect={(value) => {
+onSelect={async (value) => {
   setGender(value);
   userPreferences.gender = value;
+
+  await AsyncStorage.setItem(
+    "userPreferences",
+    JSON.stringify({
+      gender: value,
+      lookingFor,
+    })
+  );
 }}
 />
 
@@ -91,9 +120,17 @@ const [lookingFor, setLookingFor] = useState(userPreferences.lookingFor);
   title="Ich suche"
   options={["Frauen", "Männer", "Alle"]}
   selected={lookingFor}
-  onSelect={(value) => {
+onSelect={async (value) => {
   setLookingFor(value);
   userPreferences.lookingFor = value;
+
+  await AsyncStorage.setItem(
+    "userPreferences",
+    JSON.stringify({
+      gender,
+      lookingFor: value,
+    })
+  );
 }}
 />
 

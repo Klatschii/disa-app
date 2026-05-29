@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import {
   useEffect,
@@ -24,27 +25,52 @@ export default function DiscoverScreen() {
   useRef(new Animated.Value(1)).current;
   const scrollRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [lookingFor, setLookingFor] =
+  useState(userPreferences.lookingFor);
+useEffect(() => {
+  const loadPreferences = async () => {
+    const storedPreferences =
+      await AsyncStorage.getItem("userPreferences");
+
+    if (storedPreferences) {
+      const preferences = JSON.parse(storedPreferences);
+
+      userPreferences.gender =
+        preferences.gender || "Mann";
+
+      const savedLookingFor =
+        preferences.lookingFor || "Frauen";
+
+      userPreferences.lookingFor =
+        savedLookingFor;
+
+      setLookingFor(savedLookingFor);
+      setCurrentIndex(0);
+    }
+  };
+
+  loadPreferences();
+}, []);
   const filteredProfiles = profiles.filter(
+    
   (profile) => {
     if (
-      userPreferences.lookingFor === "Alle"
-    ) {
+  lookingFor === "Alle"
+) {
       return true;
     }
 
     if (
-      userPreferences.lookingFor ===
-      "Frauen"
+lookingFor === "Frauen"
     ) {
       return (
         profile.gender === "woman"
       );
     }
 
-    if (
-      userPreferences.lookingFor ===
-      "Männer"
-    ) {
+   if (
+  lookingFor === "Männer"
+) {
       return (
         profile.gender === "man"
       );
@@ -81,9 +107,6 @@ export default function DiscoverScreen() {
     </View>
   );
 }
-  useEffect(() => {
-  setCurrentIndex(0);
-}, [userPreferences.lookingFor]);
 
 const nextProfile = () => {
   scrollRef.current?.scrollTo({
@@ -96,9 +119,8 @@ const nextProfile = () => {
     duration: 180,
     useNativeDriver: true,
   }).start(() => {
-    setCurrentIndex(
-      (currentIndex + 1) %
-        filteredProfiles.length
+    setCurrentIndex((prevIndex) =>
+      (prevIndex + 1) % filteredProfiles.length
     );
 
     Animated.timing(fadeAnim, {

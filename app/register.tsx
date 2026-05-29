@@ -15,6 +15,7 @@ import { useState } from "react";
 
 export default function RegisterScreen() {
     const [special, setSpecial] = useState("");
+    const [name, setName] = useState("");
     const [birthdate, setBirthdate] = useState("");
     const [consent, setConsent] = useState(false);
   return (
@@ -32,11 +33,13 @@ export default function RegisterScreen() {
         Der erste Schritt zu ehrlichem Kennenlernen.
       </Text>
 
-      <TextInput
-        placeholder="Name"
-        placeholderTextColor="#9CA3AF"
-        style={styles.input}
-      />
+<TextInput
+  placeholder="Name"
+  placeholderTextColor="#9CA3AF"
+  style={styles.input}
+  value={name}
+  onChangeText={setName}
+/>
 
       <TextInput
         placeholder="Geburtsdatum (TT.MM.JJJJ)"
@@ -97,16 +100,14 @@ JSON.stringify({
 })
     );
     
-alert(birthdate);
-
 router.push({
-  
   pathname: "/profile-setup",
-  params: {
-    special,
-    birthdate,
-  },
-})
+params: {
+  name,
+  special,
+  birthdate,
+}
+});
   }}
 >
         <Text style={styles.registerButtonText}>Weiter</Text>

@@ -17,7 +17,8 @@ import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 
 export default function ProfileSetupScreen() {
-  const { special, birthdate } = useLocalSearchParams();
+const { name, special, birthdate } =
+  useLocalSearchParams();
   const [image, setImage] = useState<string | null>(null);
   const [about, setAbout] = useState("");
   const [proud, setProud] = useState("");
@@ -150,9 +151,14 @@ export default function ProfileSetupScreen() {
         ? JSON.parse(existingProfileRaw)
         : {};
 
-      const updatedProfile = {
-        about: about.trim() || existingProfile.about || "",
-        proud: proud.trim() || existingProfile.proud || "",
+console.log("NAME AUS PARAMS:", name);
+
+const updatedProfile = {
+name: String(
+  name || existingProfile.name || ""
+),
+  about: about.trim() || existingProfile.about || "",
+  proud: proud.trim() || existingProfile.proud || "",
         relationship:
           relationship.trim() || existingProfile.relationship || "",
         laugh: laugh.trim() || existingProfile.laugh || "",
@@ -166,6 +172,8 @@ export default function ProfileSetupScreen() {
         "userProfile",
         JSON.stringify(updatedProfile)
       );
+
+      console.log(updatedProfile);
 
       router.replace({
         pathname: "/discover",
