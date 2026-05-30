@@ -41,14 +41,34 @@ export default function RegisterScreen() {
   onChangeText={setName}
 />
 
-      <TextInput
-        placeholder="Geburtsdatum (TT.MM.JJJJ)"
-        placeholderTextColor="#9CA3AF"
-        keyboardType="number-pad"
-        style={styles.input}
-        value={birthdate}
-        onChangeText={setBirthdate}
-      />
+<TextInput
+  placeholder="Geburtsdatum z. B. 14032001"
+  placeholderTextColor="#9CA3AF"
+  style={styles.input}
+  value={birthdate}
+  onChangeText={(text) => {
+    const numbers = text.replace(/\D/g, "").slice(0, 8);
+
+    let formatted = numbers;
+
+    if (numbers.length > 4) {
+      formatted =
+        numbers.slice(0, 2) +
+        "." +
+        numbers.slice(2, 4) +
+        "." +
+        numbers.slice(4);
+    } else if (numbers.length > 2) {
+      formatted =
+        numbers.slice(0, 2) +
+        "." +
+        numbers.slice(2);
+    }
+
+    setBirthdate(formatted);
+  }}
+  keyboardType="number-pad"
+/>
 
       <TextInput
         placeholder="E-Mail"

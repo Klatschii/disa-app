@@ -6,8 +6,8 @@ import {
 } from "react-native";
 
 import { router } from "expo-router";
+import chats from "./(data)/chats";
 import BottomNav from "./bottom-nav";
-import chats from "./data/chats";
 
 export default function ChatsScreen() {
   return (

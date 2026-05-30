@@ -151,8 +151,6 @@ const { name, special, birthdate } =
         ? JSON.parse(existingProfileRaw)
         : {};
 
-console.log("NAME AUS PARAMS:", name);
-
 const updatedProfile = {
 name: String(
   name || existingProfile.name || ""
@@ -172,8 +170,6 @@ name: String(
         "userProfile",
         JSON.stringify(updatedProfile)
       );
-
-      console.log(updatedProfile);
 
       router.replace({
         pathname: "/discover",

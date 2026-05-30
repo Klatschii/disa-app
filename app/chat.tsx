@@ -8,13 +8,15 @@ import {
   View
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useLocalSearchParams } from "expo-router";
 import {
+  useEffect,
   useRef,
   useState,
 } from "react";
-import chatMessages from "./data/chatMessages";
-import profiles from "./data/profiles";
+import chatMessages from "./(data)/chatMessages";
+import profiles from "./(data)/profiles";
 
 export default function ChatScreen() {
   const { name } = useLocalSearchParams();
@@ -25,7 +27,7 @@ export default function ChatScreen() {
   
   const initialMessages =
     chatMessages[String(name)] || [];
-
+  const chatKey = `chat-${String(name)}`;
   const [message, setMessage] = useState("");
 
   const [isTyping, setIsTyping] =
@@ -42,6 +44,32 @@ export default function ChatScreen() {
     }[]
   >(initialMessages);
 
+  useEffect(() => {
+  const loadMessages = async () => {
+    const storedMessages =
+      await AsyncStorage.getItem(chatKey);
+
+    if (storedMessages) {
+      setMessages(JSON.parse(storedMessages));
+    }
+  };
+
+  loadMessages();
+}, [chatKey]);
+
+const saveMessages = async (
+  updatedMessages: {
+    id: number;
+    text: string;
+    type: "sent" | "received";
+  }[]
+) => {
+  await AsyncStorage.setItem(
+    chatKey,
+    JSON.stringify(updatedMessages)
+  );
+};
+
 const sendMessage = () => {
   
   if (message.trim().length === 0) return;
@@ -52,10 +80,13 @@ const sendMessage = () => {
     type: "sent" as const,
   };
 
-  setMessages([
-    ...messages,
-    newMessage,
-  ]);
+const updatedMessages = [
+  ...messages,
+  newMessage,
+];
+
+setMessages(updatedMessages);
+saveMessages(updatedMessages);
 
   setTimeout(() => {
   scrollRef.current?.scrollToEnd({
@@ -69,14 +100,22 @@ const sendMessage = () => {
 
 setTimeout(() => {
     setIsTyping(false);
-    setMessages((currentMessages) => [
-      ...currentMessages,
-      {
-        id: Date.now() + 1,
-        text: "Das klingt schön. Erzähl mir mehr davon 😊",
-        type: "received" as const,
-      },
-    ]);
+setMessages((currentMessages) => {
+  const replyMessage = {
+    id: Date.now() + 1,
+    text: "Das klingt schön. Erzähl mir mehr davon 😊",
+    type: "received" as const,
+  };
+
+  const updatedMessages = [
+    ...currentMessages,
+    replyMessage,
+  ];
+
+  saveMessages(updatedMessages);
+
+  return updatedMessages;
+});
 
     setTimeout(() => {
   scrollRef.current?.scrollToEnd({

@@ -51,38 +51,28 @@ const displayedProfile = savedProfile || {
 let age = "";
 
 if (displayedProfile.birthdate) {
-const birth = String(displayedProfile.birthdate);
+  const rawBirth = String(displayedProfile.birthdate);
+  const numbers = rawBirth.replace(/\D/g, "");
 
-if (birth.length === 8) {
-  const day = Number(birth.slice(0, 2));
-  const month = Number(birth.slice(2, 4));
-  const year = Number(birth.slice(4, 8));
+  if (numbers.length === 8) {
+    const day = Number(numbers.slice(0, 2));
+    const month = Number(numbers.slice(2, 4));
+    const year = Number(numbers.slice(4, 8));
 
-  const birthDate = new Date(
-    year,
-    month - 1,
-    day
-  );
+    const birthDate = new Date(year, month - 1, day);
+    const today = new Date();
 
-  const today = new Date();
+    age = String(today.getFullYear() - birthDate.getFullYear());
 
-  age = String(
-    today.getFullYear() - birthDate.getFullYear()
-  );
+    const monthDiff = today.getMonth() - birthDate.getMonth();
 
-  const monthDiff =
-    today.getMonth() - birthDate.getMonth();
-
-  if (
-    monthDiff < 0 ||
-    (
-      monthDiff === 0 &&
-      today.getDate() < birthDate.getDate()
-    )
-  ) {
-    age = String(Number(age) - 1);
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age = String(Number(age) - 1);
+    }
   }
-}
 }
 
   return (

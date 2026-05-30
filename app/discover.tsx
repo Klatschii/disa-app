@@ -1,24 +1,24 @@
 import {
-  Animated,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Animated,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import {
-  useEffect,
-  useRef,
-  useState,
+    useEffect,
+    useRef,
+    useState,
 } from "react";
 import ProfileCard from "../components/ProfileCard";
+import conditionInfo from "./(data)/conditionInfo";
+import profiles from "./(data)/profiles";
+import userPreferences from "./(data)/userPreferences";
 import BottomNav from "./bottom-nav";
-import conditionInfo from "./data/conditionInfo";
-import profiles from "./data/profiles";
-import userPreferences from "./data/userPreferences";
 
 export default function DiscoverScreen() {
   const fadeAnim =

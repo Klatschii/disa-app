@@ -11,8 +11,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
+import userPreferences from "./(data)/userPreferences";
 import BottomNav from "./bottom-nav";
-import userPreferences from "./data/userPreferences";
 
 export default function SettingsScreen() {
   
@@ -166,10 +166,18 @@ onSelect={async (value) => {
         {
           text: "Löschen",
           style: "destructive",
-          onPress: async () => {
-            await AsyncStorage.removeItem("userProfile");
-            router.replace("/");
-          },
+ onPress: async () => {
+  await AsyncStorage.removeItem("userProfile");
+  await AsyncStorage.removeItem("userPreferences");
+  await AsyncStorage.removeItem("registerData");
+  await AsyncStorage.removeItem("chat-Sarah");
+  await AsyncStorage.removeItem("chat-Mira");
+  await AsyncStorage.removeItem("chat-Lena");
+  await AsyncStorage.removeItem("chat-Daniel");
+
+  router.dismissAll();
+  router.replace("/");
+},
         },
       ]
     );
